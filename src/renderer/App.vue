@@ -1,15 +1,47 @@
+/**
+* Created by OXOYO on 2017/12/24.
+*
+*/
+
+<style lang="less" rel="stylesheet/less">
+  html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    cursor: default;
+    user-select: none;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* 根组件修改iview $Message组件样式 */
+  .ivu-message-notice {
+    width: auto;
+    vertical-align: middle;
+    left: 0;
+    display: block;
+    clear: both;
+    position: relative;
+    margin-bottom: 5px;
+  }
+</style>
+
 <template>
-  <div id="app">
+  <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
     <router-view></router-view>
-  </div>
+  </transition>
 </template>
 
 <script>
   export default {
-    name: 'x-webdesktop-electron'
+    name: 'App'
   }
 </script>
-
-<style>
-  /* CSS */
-</style>
