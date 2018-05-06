@@ -11,6 +11,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
@@ -26,7 +27,10 @@ function createWindow () {
     minWidth: 1000,
     useContentSize: true,
     frame: false,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    webPreferences: {
+      webSecurity: true
+    }
   })
 
   mainWindow.once('ready-to-show', () => {
@@ -35,6 +39,10 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
+  // 打开调试工具
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools()
+  }
   mainWindow.on('closed', () => {
     mainWindow = null
   })

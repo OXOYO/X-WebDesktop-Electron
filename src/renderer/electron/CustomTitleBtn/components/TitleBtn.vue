@@ -26,8 +26,6 @@
 </template>
 
 <script>
-  import { remote } from 'electron'
-
   export default {
     name: 'TitleBtn',
     props: {
@@ -70,7 +68,7 @@
       handleTrigger: function () {
         let _t = this
         // 获取当前窗口
-        let win = remote.getCurrentWindow()
+        let win = _t.$electron.remote.getCurrentWindow()
         switch (_t.action) {
           case 'min':
             win.minimize()

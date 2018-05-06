@@ -183,7 +183,7 @@
             // 随机一条数据
             let srcIndex = Math.floor(Math.random() * wallpaperData.length)
             // 拼装地址
-            let baseUrl = '//cn.bing.com'
+            let baseUrl = 'http://cn.bing.com'
             let wallpaperUrl = wallpaperData[srcIndex].url
             return baseUrl + wallpaperUrl
           } catch (err) {

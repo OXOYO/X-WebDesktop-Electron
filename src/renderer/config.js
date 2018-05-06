@@ -3,10 +3,13 @@
  *
  */
 
+// 运行环境
+export const Env = 'electron'
+
 // 服务配置
 export const Serv = {
-  development: '//localhost:3000/api/v2.0.0',
-  production: '//x-webdesktop-api-koa.herokuapp.com/api/v2.0.0'
+  development: 'http://localhost:3000/api/v2.0.0',
+  production: 'http://x-webdesktop-api-koa.herokuapp.com/api/v2.0.0'
 }
 
 // cookie相关配置

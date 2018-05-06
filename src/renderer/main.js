@@ -16,6 +16,9 @@ import 'iview/dist/styles/iview.css'
 import 'animate.css/animate.min.css'
 // 导入 cookie插件
 import * as Cookies from 'js-cookie'
+// 导入 vue-electron 插件
+import VueElectron from 'vue-electron'
+
 // 导入 工具类
 import utils from './global/utils'
 // 导入 配置信息
@@ -49,6 +52,7 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(iView)
 Vue.use(XDrag)
+Vue.use(VueElectron)
 
 // 注册全局 Cookies
 Vue.prototype.$Cookies = Cookies
@@ -79,7 +83,7 @@ axiosInstance.interceptors.request.use((config) => {
   // loading 进度条启动
   Vue.prototype.$Loading.start()
   let key = Config.Cookie.getItem('token')
-  let val = Cookies.get(key) || ''
+  let val = Cookies.get(key) || sessionStorage.getItem(key) || ''
   // 设置请求头
   config.headers.common[key] = val
   return config
@@ -129,7 +133,7 @@ Vue.prototype.$http = axiosInstance
 // 创建 router 实例
 const routerInstance = new VueRouter({
   // 开启 HTML5 history 模式
-  mode: 'history',
+  mode: Config.Env === 'electron' ? 'hash' : 'history',
   base: '/X-WebDesktop-Vue/',
   routes: routers,
   scrollBehavior: (to, from, savedPosition) => {
