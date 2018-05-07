@@ -11,7 +11,12 @@
     height: 30px;
     line-height: 30px;
     background-color: transparent;
-    z-index: 9999;
+    margin-top: 2px;
+    z-index: 1500;
+    top: 0;
+    left: 0;
+    right: 0;
+    writing-mode: horizontal-tb;
     -webkit-app-region: drag;
 
     .title-btn-block {
@@ -35,7 +40,7 @@
 </style>
 
 <template>
-  <div class="custom-title-btn">
+  <div class="custom-title-btn" @contextmenu.stop.prevent>
     <div class="title-btn-block">
       <TitleBtn action="min"></TitleBtn>
       <TitleBtn action="max"></TitleBtn>

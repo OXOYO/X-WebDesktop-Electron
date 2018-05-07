@@ -1,6 +1,6 @@
 {
   "name": "x-webdesktop-electron",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "author": "OXOYO <zmn2007.hi@163.com>",
   "description": "The WebDesktop system based on Vue and Electron",
   "license": null,
@@ -22,8 +22,9 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "x-webdesktop-electron",
-    "appId": "org.simulatedgreg.electron-vue",
+    "productName": "X-WebDesktop",
+    "appId": "io.github.oxoyo",
+    "copyright": "OXOYO",
     "directories": {
       "output": "build"
     },

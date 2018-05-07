@@ -52,6 +52,8 @@
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
+      <!-- 自定义标题栏按钮 -->
+      <CustomTitleBtn></CustomTitleBtn>
     </div>
     <slot></slot>
   </div>
@@ -59,9 +61,13 @@
 
 <script>
   import { mapState } from 'vuex'
+  import CustomTitleBtn from '../../../electron/CustomTitleBtn/Index.vue'
 
   export default {
     name: 'Desktop',
+    components: {
+      CustomTitleBtn
+    },
     props: {
       childComponents: {
         type: Object,

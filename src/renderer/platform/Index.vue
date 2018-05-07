@@ -22,12 +22,12 @@
     @click="handleLeftClick($event)"
     @contextmenu.stop.prevent="handleRightClick($event)"
   >
-    <!-- 自定义标题栏按钮 -->
-    <CustomTitleBtn></CustomTitleBtn>
     <!-- 前台 -->
     <component :is="components.Home" v-if="!userInfo.isLogin">
       <component :is="components.Login"></component>
       <component :is="components.Wallpaper" :style="{ 'z-index': -10 }"></component>
+      <!-- 自定义标题栏按钮 -->
+      <CustomTitleBtn></CustomTitleBtn>
     </component>
     <!-- 后台 -->
     <component :is="components.Admin" v-if="userInfo.isLogin">

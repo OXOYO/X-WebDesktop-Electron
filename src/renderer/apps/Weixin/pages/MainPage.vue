@@ -41,7 +41,7 @@
     name: 'MainPage',
     data () {
       return {
-        appUrl: '//wx.qq.com',
+        appUrl: 'https://wx.qq.com',
         appPath: null,
         appWidth: 0,
         appHeight: 0
