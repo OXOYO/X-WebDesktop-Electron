@@ -244,6 +244,9 @@
       let _t = this
       // 初始化表单数据
       _t.initFormData()
+    //      if (!_t.isCurrentEditAccountEmpty) {
+    //        _t.getApplicationsList()
+    //      }
     },
     destroyed: function () {
       let _t = this

@@ -16,6 +16,7 @@ module.exports = {
     'html'
   ],
   'rules': {
+    "standard/no-callback-literal": "off",
     // allow paren-less arrow functions
     'arrow-parens': 0,
     // allow async-await

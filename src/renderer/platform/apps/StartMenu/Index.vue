@@ -11,7 +11,7 @@
     height: 39px;
     margin: 0;
     position: relative;
-    user-select:none;
+    user-select: none;
 
     .start-menu-icon-main {
       width: 60px;
@@ -49,7 +49,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -20px;
+        margin-left: -23px;
         margin-top: -20px;
         width: 40px;
         height: 40px;
@@ -58,7 +58,7 @@
         /*box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);*/
       }
       .app-icon-down {
-        margin-left: -19px;
+        margin-left: -22px;
         margin-top: -19px;
       }
       .app-icon-bg {
@@ -105,12 +105,14 @@
       position: absolute;
       z-index: 5000;
       left: 0;
-      bottom: 40px;
+      bottom: 39px;
       width: 410px;
       height: 600px;
       padding: 8px;
       border: 1px solid rgba(14, 46, 73, 0.3);
-      box-shadow: 5px -5px 5px 0px rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.1);
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
 
       .start-menu-bg {
         position: absolute;
@@ -120,18 +122,20 @@
         left: 0;
         display: inline-block;
         overflow: hidden;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
 
-        .wallpaper-image {
+        &:before {
+          content: ' ';
           position: absolute;
-          top: -30px;
-          right: -30px;
-          bottom: -30px;
-          left: -30px;
-          z-index: -1;
-          display: inline-block;
-          background: #323E54;
-          filter: blur(20px);
-          overflow: hidden;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          border: 1px solid rgba(255, 255, 255, .1);
+          border-bottom: none;
+          border-top-right-radius: 5px;
+          border-top-left-radius: 5px;
         }
       }
 
@@ -146,7 +150,7 @@
         width: 61%;
         max-width: 250px;
         height: 100%;
-        background: rgba(255, 255, 255, .9);
+        background: rgba(255, 255, 255, .5);
         display: inline-block;
         float: left;
         overflow: auto;
@@ -169,9 +173,11 @@
           }
           &:hover {
             /*background: #f3f3f3;*/
-            background: #cfe3fd;
+            /*background: #cfe3fd;*/
+            background: #fff;
             &:before {
-              background: #2A5AAD;
+              /*background: #2A5AAD;*/
+              background: #57a3f3;
             }
           }
           .list-item-icon {
@@ -186,6 +192,7 @@
           .list-item-title {
             display: inline-block;
             vertical-align: middle;
+            color: #000;
           }
         }
       }
@@ -231,6 +238,15 @@
               cursor: default;
               &:hover {
                 color: #57a3f3;
+              }
+
+              .info-author-link {
+                display: inline-block;
+                color: #ffffff;
+
+                &:hover {
+                  color: #2d8cf0;
+                }
               }
             }
           }
@@ -302,11 +318,7 @@
       <div
         class="start-menu-bg"
       >
-        <div
-          class="wallpaper-image"
-          :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
-        >
-        </div>
+        <WallpaperBackground style="border-top-right-radius: 5px; border-top-left-radius: 5px;"></WallpaperBackground>
       </div>
       <div class="start-menu-body">
         <div class="list-block">
@@ -341,6 +353,11 @@
             <div class="info-action-group">
               <div class="info-action-item">
                 系统设置
+              </div>
+            </div>
+            <div class="info-action-group">
+              <div class="info-action-item">
+                <a class="info-author-link" v-if="$Config.System.repository.url" :href="$Config.System.repository.url" target="_blank">GitHub</a>
               </div>
             </div>
           </div>
@@ -381,9 +398,6 @@
     computed: {
       ...mapState('Platform/Admin', {
         appData: state => state.appData
-      }),
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
       })
     },
     methods: {

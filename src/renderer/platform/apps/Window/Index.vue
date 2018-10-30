@@ -14,7 +14,7 @@
     overflow: hidden;
     background: #fff;
     /*border: 1px solid #fff;*/
-    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, .1);
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, .1);
     writing-mode: horizontal-tb;
     transition: all .3s ease-out;
 
@@ -113,19 +113,6 @@
       }
     }
 
-    .wallpaper-image {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: rgba(255, 255, 255, .1);
-      filter: blur(20px);
-      margin: -30px;
-      z-index: -1;
-    }
-
     .app-window-header {
       position: absolute;
       top: 0;
@@ -210,11 +197,7 @@
     <div v-if="enableResizeHandler('right-border')" class="app-window-resize resize-right-border"></div>
     <div v-if="enableResizeHandler('bottom-border')" class="app-window-resize resize-bottom-border"></div>
     <div v-if="enableResizeHandler('left-border')" class="app-window-resize resize-left-border"></div>
-    <div
-      class="wallpaper-image"
-      :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
-    >
-    </div>
+    <WallpaperBackground></WallpaperBackground>
     <div
       class="app-window-header"
     >
@@ -324,7 +307,7 @@
             // 回调
             callback: {
               start: null,
-              move: null,
+              move: _t.handleDragMove,
               done: _t.handleDragResizeDone
             }
           },
@@ -354,8 +337,19 @@
             // 回调
             callback: {
               start: null,
-              move: null,
+              move: _t.handleResizeMove,
               done: _t.handleDragResizeDone
+            }
+          },
+          // 范围
+          range: () => {
+            return {
+              minX: 0,
+              maxX: document.body.clientWidth,
+              minY: 0,
+              maxY: document.body.clientHeight - 60,
+              // 间距5px
+              margin: 5
             }
           }
         },
@@ -366,12 +360,18 @@
             height: '200px',
             left: 'calc(50% - 150px)',
             top: 'calc(50% - 100px)'
+          //            ,
+          //            'margin-left': '-150px',
+          //            'margin-top': '-100px'
           },
           middle: {
             width: '800px',
             height: '600px',
             left: 'calc(50% - 400px)',
             top: 'calc(50% - 300px)'
+          //            ,
+          //            'margin-left': '-400px',
+          //            'margin-top': '-300px'
           },
           max: {
             left: 0,
@@ -384,18 +384,19 @@
             height: 0,
             top: '100%'
           }
+        },
+        splitScreen: {
+          enable: false,
+          // 分屏模式
+          type: ''
         }
       }
     },
     computed: {
       ...mapState('Platform/Admin', {
         _appData: state => {
-          console.log('state', mapState, state)
           return state._appData
         }
-      }),
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
       }),
       windowSizeClass: function () {
         let _t = this
@@ -429,7 +430,6 @@
       // 处理窗口拖拽缩放配置
       handleDragResizeConfig: function () {
         let _t = this
-        console.log('_t.info', _t.info)
         // 当前应用的拖拽缩放配置
         let appDragResizeConfig = _t.info.config.window.hasOwnProperty('dragResizeConfig') ? _t.info.config.window.dragResizeConfig : {}
         // 合并配置，遇到对象则合并，其他覆盖
@@ -500,14 +500,161 @@
           }
         })
       },
+      // 拖拽中回调
+      handleDragMove: function (style, mousePosition, range) {
+        let _t = this
+        let splitScreen = {
+          enable: true,
+          // 分屏模式
+          type: '',
+          mousePosition,
+          range
+        }
+        let minX = range.minX + range.margin
+        let maxX = range.maxX - range.margin
+        let minY = range.minY + range.margin
+        let maxY = range.maxY - range.margin
+        if (mousePosition.x <= minX && mousePosition.y <= minY) {
+          splitScreen.type = 'left-top'
+        } else if (mousePosition.x <= minX && mousePosition.y >= maxY) {
+          splitScreen.type = 'left-bottom'
+        } else if (mousePosition.x >= maxX && mousePosition.y <= minY) {
+          splitScreen.type = 'right-top'
+        } else if (mousePosition.x >= maxX && mousePosition.y >= maxY) {
+          splitScreen.type = 'right-bottom'
+        } else if (mousePosition.x <= minX) {
+          splitScreen.type = 'left'
+        } else if (mousePosition.x >= maxX) {
+          splitScreen.type = 'right'
+        } else if (mousePosition.y <= minY) {
+          splitScreen.type = 'full-screen'
+        } else {
+          splitScreen.enable = false
+        }
+        _t.splitScreen = splitScreen
+        // 广播事件 触发splitScreen显示事件
+        _t.$utils.bus.$emit('platform/window/splitScreen/show', {
+          // 通过XDrag控制窗口拖拽、缩放
+          action: 'splitScreen',
+          data: {
+            ...splitScreen
+          }
+        })
+      },
+      // 缩放中回调
+      handleResizeMove: function (style, mousePosition, range) {
+        let _t = this
+        let appInfo = {..._t.info}
+        let splitScreen = {
+          enable: true,
+          // 分屏模式
+          type: '',
+          mousePosition,
+          range,
+          style: {
+            ...appInfo.config['window']['style']
+          }
+        }
+        // let minX = range.minX + range.margin
+        // let maxX = range.maxX - range.margin
+        let minY = range.minY + range.margin
+        let maxY = range.maxY - range.margin
+        if (mousePosition.y <= minY) {
+          splitScreen.type = 'top'
+        } else if (mousePosition.y >= maxY) {
+          splitScreen.type = 'bottom'
+        } else {
+          splitScreen.enable = false
+        }
+        _t.splitScreen = splitScreen
+        // 广播事件 触发splitScreen显示事件
+        _t.$utils.bus.$emit('platform/window/splitScreen/show', {
+          // 通过XDrag控制窗口拖拽、缩放
+          action: 'splitScreen',
+          data: {
+            ...splitScreen
+          }
+        })
+      },
       // 拖拽完成回调
       handleDragResizeDone: function (style) {
         let _t = this
         // 分发mutations，更新窗口样式
         let appInfo = {..._t.info}
+        let bodyWidth = document.body.clientWidth
+        let bodyHeight = document.body.clientHeight - 40
+        let splitScreenStyle = {}
+        if (_t.splitScreen.enable && _t.splitScreen.type) {
+          switch (_t.splitScreen.type) {
+            case 'left-top':
+              splitScreenStyle = {
+                top: 0,
+                left: 0,
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'left-bottom':
+              splitScreenStyle = {
+                top: bodyHeight / 2 + 'px',
+                left: 0,
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'right-top':
+              splitScreenStyle = {
+                top: 0,
+                left: bodyWidth / 2 + 'px',
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'right-bottom':
+              splitScreenStyle = {
+                top: bodyHeight / 2 + 'px',
+                left: bodyWidth / 2 + 'px',
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight / 2 + 'px'
+              }
+              break
+            case 'left':
+              splitScreenStyle = {
+                top: 0,
+                left: 0,
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight + 'px'
+              }
+              break
+            case 'right':
+              splitScreenStyle = {
+                top: 0,
+                left: bodyWidth / 2 + 'px',
+                width: bodyWidth / 2 + 'px',
+                height: bodyHeight + 'px'
+              }
+              break
+            case 'top':
+            case 'bottom':
+              splitScreenStyle = {
+                top: 0,
+                height: bodyHeight + 'px'
+              }
+              break
+            case 'full-screen':
+              splitScreenStyle = {
+                top: 0,
+                left: 0,
+                width: bodyWidth + 'px',
+                height: bodyHeight + 'px'
+              }
+              break
+          }
+        }
         appInfo.config['window']['style'] = {
           ...appInfo.config['window']['style'],
-          ...style
+          ...style,
+          ...splitScreenStyle
         }
         // 广播事件 触发window事件
         _t.$utils.bus.$emit('platform/window/trigger', {
@@ -517,6 +664,8 @@
             appInfo: appInfo
           }
         })
+        // 广播事件 触发splitScreen隐藏事件
+        _t.$utils.bus.$emit('platform/window/splitScreen/hide')
       }
     }
   }

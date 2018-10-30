@@ -54,9 +54,9 @@
           // 图片壁纸路径列表
           // FIXME 列表应该通过用户配置获得
           images: [
-            // './static/wallpaper/bg_0001.jpg',
-            // './static/wallpaper/bg_0002.jpg',
-            // './static/wallpaper/bg_0003.jpg'
+          //            './static/wallpaper/bg_0001.jpg',
+          //            './static/wallpaper/bg_0002.jpg',
+          //            './static/wallpaper/bg_0003.jpg'
           ],
           // 组件壁纸 组件名称列表
           components: [

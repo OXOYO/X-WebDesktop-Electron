@@ -17,7 +17,7 @@
       padding: 5px 10px 5px 40px;
       position: relative;
       cursor: default;
-      border: 1px solid transparent;
+      /*border: 1px solid transparent;*/
       border-left: none;
       border-right: none;
 
@@ -101,9 +101,9 @@
           slot="child"
         >
           <ContextMenuItem
-            v-for="(childItem, index) in item.children"
+            v-for="childItem in item.children"
             :info="childItem"
-            :key="'context_menu_item_' + item.name + '_' + index"
+            :key="item.name"
           >
           </ContextMenuItem>
         </div>

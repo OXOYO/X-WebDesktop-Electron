@@ -1,6 +1,19 @@
-# x-webdesktop-electron
+# X-WebDesktop-Electron
 
-> The WebDesktop system based on Vue and Electron
+> 基于Vue & Electron 的 WebDesktop 系统
+
+# Version
+
+| FrontEnd | API | Electron |
+| :-------- | :-------- | :-------- |
+| [3.x](https://github.com/OXOYO/X-WebDesktop-Vue/tree/master) | [3.x](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/master) | [3.x](https://github.com/OXOYO/X-WebDesktop-Electron/tree/master) |
+| [2.0.0](https://github.com/OXOYO/X-WebDesktop-Vue/tree/2.0.0) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/2.0.0) | [2.0.0](https://github.com/OXOYO/X-WebDesktop-Electron/tree/2.0.0) |
+| [1.0.1](https://github.com/OXOYO/X-WebDesktop-Vue/tree/1.0.1) | [1.0.1](https://github.com/OXOYO/X-WebDesktop-Api-Koa/tree/1.0.1) | - |
+| [1.0.0](https://github.com/OXOYO/X-Desktop-Vue/tree/master) | - | - |
+
+# Download for Windows
+
+[3.x](./build/X-WebDesktop Setup 3.0.1.exe)
 
 #### Build Setup
 

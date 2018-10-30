@@ -7,7 +7,7 @@
   .app-window-iframe {
     width: 100%;
     height: 100%;
-    background: #ffffff;
+    /*background: #ffffff;*/
 
     .loading {
       display: inline-block;
@@ -79,7 +79,6 @@
       frameborder="0"
       marginwidth="0"
       marginheight="0"
-      scrolling="no"
     >
     </iframe>
   </div>

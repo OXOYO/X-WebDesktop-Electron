@@ -8,8 +8,9 @@ export const Env = 'electron'
 
 // 服务配置
 export const Serv = {
-  development: 'http://localhost:3000/api/v2.0.0',
-  production: 'http://x-webdesktop-api-koa.herokuapp.com/api/v2.0.0'
+  development: 'http://localhost:3000/api/v3.0.1',
+  // production: '//x-webdesktop-api-koa.herokuapp.com/api/v2.0.0'
+  production: 'http://47.93.49.248/x-webdesktop-api/v3.0.1'
 }
 
 // cookie相关配置
@@ -37,10 +38,10 @@ export const System = {
     type: 'github',
     url: 'https://github.com/OXOYO/X-WebDesktop-Vue'
   },
-  version: '2.0.0',
+  version: '3.0.1',
   name: 'X-WebDesktop-Vue',
   title: 'X-WebDesktop-Vue',
   subtitle: 'X-WebDesktop-Vue',
   logo: './static/logo.png',
-  copyright: '© 2017'
+  copyright: '© 2017 - 2018 OXOYO'
 }

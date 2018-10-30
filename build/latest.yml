@@ -1,0 +1,9 @@
+version: 3.0.1
+files:
+  - url: x-webdesktop-electron-setup-3.0.1.exe
+    sha512: VCPcbgz6srg4AWdUuBuPti7rPaphKQm4WJtY31h3YqByejcrOJOYJRt+DnJhlORwW0LmAkUpzUYm45SJVs26vg==
+    size: 41213934
+path: x-webdesktop-electron-setup-3.0.1.exe
+sha512: VCPcbgz6srg4AWdUuBuPti7rPaphKQm4WJtY31h3YqByejcrOJOYJRt+DnJhlORwW0LmAkUpzUYm45SJVs26vg==
+sha2: fbc384015a0c89ebd3d3ab7bc194eb6dbb186d9bc075322705d0e941fa4945fa
+releaseDate: '2018-10-30T10:21:11.851Z'

@@ -36,6 +36,13 @@ XDrag.install = function (Vue) {
             done: (style) => {
               console.log('drag done', style)
             }
+          },
+          // 拖拽范围 类型：Object || Function
+          range: {
+            minX: 0,
+            maxX: 500,
+            minY: 0,
+            maxY: 500,
           }
         },
         // 缩放配置
@@ -58,8 +65,22 @@ XDrag.install = function (Vue) {
             done: (style) => {
               console.log('resize done', style)
             }
+          },
+          // 缩放范围 类型：Object || Function
+          range: {
+            minX: 0,
+            maxX: 500,
+            minY: 0,
+            maxY: 500,
           }
-        }
+        },
+        // 全局范围 类型：Object || Function
+          range: {
+            minX: 0,
+            maxX: 500,
+            minY: 0,
+            maxY: 500,
+          }
       }
       */
       let getCss = function (element) {
@@ -119,26 +140,45 @@ XDrag.install = function (Vue) {
                   event.preventDefault()
                 }
                 if (dragInfo.flag) {
+                  // 鼠标位置
+                  let mousePosition = {
+                    x: event.clientX,
+                    y: event.clientY
+                  }
+                  // 检查范围
+                  let range = config.drag.range || config.range
+                  let isOutRange = false
+                  if (range) {
+                    if (typeof range === 'function') {
+                      range = range()
+                    }
+                    if (mousePosition.x < range.minX || mousePosition.x > range.maxX || mousePosition.y < range.minY || mousePosition.y > range.maxY) {
+                      console.log('XDrag Warning:: drag out range!')
+                      isOutRange = true
+                    }
+                  }
                   if (target.classList.contains(config.drag.class.start)) {
                     target.classList.remove(config.drag.class.start)
                   }
                   if (!target.classList.contains(config.drag.class.move)) {
                     target.classList.add(config.drag.class.move)
                   }
-                  let dis = {
-                    x: event.clientX - dragInfo.start.x,
-                    y: event.clientY - dragInfo.start.y
+                  if (!isOutRange) {
+                    let dis = {
+                      x: mousePosition.x - dragInfo.start.x,
+                      y: mousePosition.y - dragInfo.start.y
+                    }
+                    dragInfo.done = {
+                      left: dragInfo.position.left + dis.x + 'px',
+                      top: dragInfo.position.top + dis.y + 'px',
+                      margin: 0
+                    }
+                    Object.keys(dragInfo.done).map(function (key) {
+                      target.style[key] = dragInfo.done[key]
+                    })
                   }
-                  dragInfo.done = {
-                    left: dragInfo.position.left + dis.x + 'px',
-                    top: dragInfo.position.top + dis.y + 'px',
-                    margin: 0
-                  }
-                  Object.keys(dragInfo.done).map(function (key) {
-                    target.style[key] = dragInfo.done[key]
-                  })
                   if (config.drag.callback && typeof config.drag.callback.move === 'function') {
-                    config.drag.callback.move(dragInfo.done)
+                    config.drag.callback.move(dragInfo.done, mousePosition, range)
                   }
                 }
               }
@@ -229,77 +269,97 @@ XDrag.install = function (Vue) {
                   event.preventDefault()
                 }
                 if (resizeInfo.flag) {
+                  // 鼠标位置
+                  let mousePosition = {
+                    x: event.clientX,
+                    y: event.clientY
+                  }
+                  // 检查范围
+                  let range = config.resize.range || config.range
+                  let isOutRange = false
+                  if (range) {
+                    if (typeof range === 'function') {
+                      range = range()
+                    }
+                    if (mousePosition.x < range.minX || mousePosition.x > range.maxX || mousePosition.y < range.minY || mousePosition.y > range.maxY) {
+                      console.log('XDrag Warning:: resize out range!')
+                      isOutRange = true
+                    }
+                  }
+
                   if (target.classList.contains(config.resize.class.start)) {
                     target.classList.remove(config.resize.class.start)
                   }
                   if (!target.classList.contains(config.resize.class.move)) {
                     target.classList.add(config.resize.class.move)
                   }
-                  let dis = {
-                    x: event.clientX - resizeInfo.start.x,
-                    y: event.clientY - resizeInfo.start.y
+                  if (!isOutRange) {
+                    let dis = {
+                      x: mousePosition.x - resizeInfo.start.x,
+                      y: mousePosition.y - resizeInfo.start.y
+                    }
+                    let style
+                    switch (resizeInfo.direction) {
+                      case 'top-left':
+                        style = {
+                          width: resizeInfo.position.width - dis.x + 'px',
+                          height: resizeInfo.position.height - dis.y + 'px',
+                          left: resizeInfo.position.left + dis.x + 'px',
+                          top: resizeInfo.position.top + dis.y + 'px'
+                        }
+                        break
+                      case 'top-right':
+                        style = {
+                          width: resizeInfo.position.width + dis.x + 'px',
+                          height: resizeInfo.position.height - dis.y + 'px',
+                          top: resizeInfo.position.top + dis.y + 'px'
+                        }
+                        break
+                      case 'bottom-left':
+                        style = {
+                          width: resizeInfo.position.width - dis.x + 'px',
+                          height: resizeInfo.position.height + dis.y + 'px',
+                          left: resizeInfo.position.left + dis.x + 'px'
+                        }
+                        break
+                      case 'bottom-right':
+                        style = {
+                          width: resizeInfo.position.width + dis.x + 'px',
+                          height: resizeInfo.position.height + dis.y + 'px'
+                        }
+                        break
+                      case 'top-border':
+                        style = {
+                          height: resizeInfo.position.height - dis.y + 'px',
+                          top: resizeInfo.position.top + dis.y + 'px'
+                        }
+                        break
+                      case 'right-border':
+                        style = {
+                          width: resizeInfo.position.width + dis.x + 'px'
+                        }
+                        break
+                      case 'bottom-border':
+                        style = {
+                          height: resizeInfo.position.height + dis.y + 'px'
+                        }
+                        break
+                      case 'left-border':
+                        style = {
+                          width: resizeInfo.position.width - dis.x + 'px',
+                          left: resizeInfo.position.left + dis.x + 'px'
+                        }
+                        break
+                    }
+                    resizeInfo.done = {
+                      ...style
+                    }
+                    Object.keys(resizeInfo.done).map(function (key) {
+                      target.style[key] = resizeInfo.done[key]
+                    })
                   }
-                  let style
-                  switch (resizeInfo.direction) {
-                    case 'top-left':
-                      style = {
-                        width: resizeInfo.position.width - dis.x + 'px',
-                        height: resizeInfo.position.height - dis.y + 'px',
-                        left: resizeInfo.position.left + dis.x + 'px',
-                        top: resizeInfo.position.top + dis.y + 'px'
-                      }
-                      break
-                    case 'top-right':
-                      style = {
-                        width: resizeInfo.position.width + dis.x + 'px',
-                        height: resizeInfo.position.height - dis.y + 'px',
-                        top: resizeInfo.position.top + dis.y + 'px'
-                      }
-                      break
-                    case 'bottom-left':
-                      style = {
-                        width: resizeInfo.position.width - dis.x + 'px',
-                        height: resizeInfo.position.height + dis.y + 'px',
-                        left: resizeInfo.position.left + dis.x + 'px'
-                      }
-                      break
-                    case 'bottom-right':
-                      style = {
-                        width: resizeInfo.position.width + dis.x + 'px',
-                        height: resizeInfo.position.height + dis.y + 'px'
-                      }
-                      break
-                    case 'top-border':
-                      style = {
-                        height: resizeInfo.position.height - dis.y + 'px',
-                        top: resizeInfo.position.top + dis.y + 'px'
-                      }
-                      break
-                    case 'right-border':
-                      style = {
-                        width: resizeInfo.position.width + dis.x + 'px'
-                      }
-                      break
-                    case 'bottom-border':
-                      style = {
-                        height: resizeInfo.position.height + dis.y + 'px'
-                      }
-                      break
-                    case 'left-border':
-                      style = {
-                        width: resizeInfo.position.width - dis.x + 'px',
-                        left: resizeInfo.position.left + dis.x + 'px'
-                      }
-                      break
-                  }
-                  resizeInfo.done = {
-                    ...style
-                  }
-                  Object.keys(resizeInfo.done).map(function (key) {
-                    target.style[key] = resizeInfo.done[key]
-                  })
                   if (config.resize.callback && typeof config.resize.callback.move === 'function') {
-                    config.resize.callback.move(resizeInfo.done)
+                    config.resize.callback.move(resizeInfo.done, mousePosition, range)
                   }
                 }
               }

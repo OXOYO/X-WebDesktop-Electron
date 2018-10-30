@@ -39,7 +39,7 @@
         :is="childComponents.DesktopIcon"
         v-for="item in appData.iconList"
         v-if="item.action !== 'install' || (item.action === 'install' && item.installed)"
-        :key="'desktop_icon_' + (item.app_name || item.config.app.name)"
+        :key="item.app_name || item.config.app.name"
         :info="item"
         :showTitle="appData.showTitle"
         :style="item.config.desktopIcon.style"
@@ -48,10 +48,12 @@
       <component
         :is="childComponents.Window"
         v-for="item in openedWindowList"
-        :key="'desktop_window_' + (item.app_name || item.config.app.name)"
+        :key="item.app_name || item.config.app.name"
         :info="item"
       ></component>
       <component :is="childComponents.Wallpaper" :style="{ 'z-index': 1000 }"></component>
+      <!-- 分屏组件 -->
+      <component :is="childComponents.SplitScreen" :data="splitScreenData"></component>
       <!-- 自定义标题栏按钮 -->
       <CustomTitleBtn></CustomTitleBtn>
     </div>
@@ -60,8 +62,8 @@
 </template>
 
 <script>
+  import CustomTitleBtn from '@/electron/CustomTitleBtn/Index.vue'
   import { mapState } from 'vuex'
-  import CustomTitleBtn from '../../../electron/CustomTitleBtn/Index.vue'
 
   export default {
     name: 'Desktop',
@@ -98,20 +100,28 @@
             height: '200px',
             left: 'calc(50% - 150px)',
             top: 'calc(50% - 100px)'
+          //            ,
+          //            'margin-left': '-150px',
+          //            'margin-top': '-100px'
           },
           middle: {
             width: '800px',
             height: '600px',
             left: 'calc(50% - 400px)',
             top: 'calc(50% - 300px)'
+          //            ,
+          //            'margin-left': '-400px',
+          //            'margin-top': '-300px'
           },
           max: {
-            width: 'auto',
-            height: 'auto',
+            // width: 'auto',
+            // height: 'auto',
+            width: 'calc(100%)',
+            height: 'calc(100% - 40px)',
             left: 0,
-            top: 0,
-            right: 0,
-            bottom: '42px'
+            top: 0
+            // right: 0,
+            // bottom: '42px'
           },
           min: {
             width: 0,
@@ -131,6 +141,12 @@
           height: '600px',
           'margin-left': '-400px',
           'margin-top': '-300px'
+        },
+        // 分屏数据
+        splitScreenData: {
+          enable: false,
+          // 分屏模式
+          type: ''
         }
       }
     },
@@ -728,10 +744,10 @@
                 let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
                 if (taskBarList.length) {
                   let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-                  // FIXME 每个任务栏图标实际宽度 68px
+                  // FIXME 每个任务栏图标实际宽度 62px
                   iconList[currentAppIndex].config['window']['style'] = {
                     ...iconList[currentAppIndex].config['window']['style'],
-                    left: 68 * (taskBarIndex + 1) + 'px'
+                    left: 62 * (taskBarIndex + 1) + 'px'
                   }
                 }
               } else {
@@ -773,10 +789,10 @@
               let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
               if (taskBarList.length) {
                 let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-                // FIXME 每个任务栏图标实际宽度 68px
+                // FIXME 每个任务栏图标实际宽度 62px
                 iconList[currentAppIndex].config['window']['style'] = {
                   ...iconList[currentAppIndex].config['window']['style'],
-                  left: 68 * (taskBarIndex + 1) + 'px'
+                  left: 62 * (taskBarIndex + 1) + 'px'
                 }
               }
               break
@@ -930,10 +946,10 @@
           let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
           if (taskBarList.length) {
             let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-            // FIXME 每个任务栏图标实际宽度 68px
+            // FIXME 每个任务栏图标实际宽度 62px
             iconList[currentAppIndex].config['window']['style'] = {
               ...iconList[currentAppIndex].config['window']['style'],
-              left: 68 * (taskBarIndex + 1) + 'px'
+              left: 62 * (taskBarIndex + 1) + 'px'
             }
           }
           _t.$store.commit(_t.$utils.store.getType('Admin/appData/set', 'Platform'), {
@@ -1032,10 +1048,10 @@
                   let taskBarList = findAllIndex(iconList, (item) => item.config.window.status === 'open' || item.config.taskBar.isPinned)
                   if (taskBarList.length) {
                     let taskBarIndex = taskBarList.indexOf(currentAppIndex)
-                    // FIXME 每个任务栏图标实际宽度 68px
+                    // FIXME 每个任务栏图标实际宽度 62px
                     iconList[currentAppIndex].config['window']['style'] = {
                       ...iconList[currentAppIndex].config['window']['style'],
-                      left: 68 * (taskBarIndex + 1) + 'px'
+                      left: 62 * (taskBarIndex + 1) + 'px'
                     }
                   }
                 } else {
@@ -1149,11 +1165,11 @@
         console.log('doApplicationInstall', res)
         if (!res || res.status !== 200) {
           // _t.$Message.error('安装失败！')
-          callback && callback(false)// eslint-disable-line standard/no-callback-literal
+          callback && callback(false)
           return
         }
         _t.$Message.info(res.msg || '安装成功！')
-        callback && callback(true, res.msg)// eslint-disable-line standard/no-callback-literal
+        callback && callback(true, res.msg)
         /*
         _t.$nextTick(function () {
           // 刷新用户应用列表
@@ -1177,15 +1193,19 @@
         console.log('doApplicationUninstall', res)
         if (!res || res.status !== 200) {
           // _t.$Message.error('卸载失败！')
-          callback && callback(false)// eslint-disable-line standard/no-callback-literal
+          callback && callback(false)
           return
         }
         _t.$Message.info(res.msg || '安装成功！')
-        callback && callback(true, res.msg)// eslint-disable-line standard/no-callback-literal
+        callback && callback(true, res.msg)
         _t.$nextTick(function () {
           // 刷新用户应用列表
           _t.$utils.bus.$emit('Admin/appData/refresh')
         })
+      },
+      handleSplitScreen: function (tmpInfo) {
+        let _t = this
+        _t.splitScreenData = tmpInfo.data
       }
     },
     created: function () {
@@ -1207,6 +1227,10 @@
       // 监听 window 操作
       _t.$utils.bus.$on('platform/window/trigger', function (tmpInfo) {
         _t.handleWindowTrigger(tmpInfo)
+      })
+      // 监听 window 分屏显示
+      _t.$utils.bus.$on('platform/window/splitScreen/show', function (tmpInfo) {
+        _t.handleSplitScreen(tmpInfo)
       })
       // 监听应用安装
       _t.$utils.bus.$on('platform/application/install', function (tmpInfo) {

@@ -6,110 +6,127 @@
 
 <style lang="less" rel="stylesheet/less">
   .app-login {
-    position: relative;
-    vertical-align: middle;
-    margin: 0 auto;
-    background: transparent;
-    border-radius: 5px;
-    padding: 15px;
-    top: 100px;
-    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, .1);
-    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 
-    .wallpaper-image {
-      content: '';
+    .main-box {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
+      width: 280px;
+      /*height: 250px;*/
+      margin-left: -140px;
+      margin-top: -200px;
+      box-shadow: 0 0 5px 5px rgba(0, 0, 0, .1);
       background: rgba(255, 255, 255, .1);
-      filter: blur(10px);
-      margin: -30px;
-      z-index: -1;
+      overflow: hidden;
+
+      &:hover,
+      &:focus {
+        box-shadow: 0 0 2px 2px rgba(0, 0, 0, .2);
+      }
     }
 
-    .login-modal-header {
-      height: auto;
+    .login-header {
       text-align: center;
-      .login-logo {
-        display: block;
-        width: auto;
-        margin: 0 auto;
-      }
-      .login-title {
+      background: #fff;
+      height: 129px;
+
+      .avatar-block {
         display: inline-block;
-        cursor: default;
-        width: 100%;
-        padding-top: 10px;
-        font-size: 26px;
-        font-weight: bolder;
-        color: rgb(52, 117, 207);
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+        overflow: hidden;
+
+        .avatar {
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
       }
     }
-    .login-modal-body {
-      margin-top: 20px;
+    .login-body {
+      text-align: center;
+      padding-top: 100px;
 
       .login-form {
+        width: 250px;
+        margin: 0 auto;
+        text-align: left;
+      }
+    }
 
-        input {
-          // 解决chrome下表单自动填充导致的input框黄底问题
-          &:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
-          }
-        }
+    .login-footer {
+      padding: 12px 15px;
+      text-align: right;
+
+      .notice-text {
+        display: inline-block;
+        color: #fff;
+        text-align: left;
+        float: left;
+      }
+    }
+
+    input {
+      // 解决chrome下表单自动填充导致的input框黄底问题
+      &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
       }
     }
   }
 </style>
 
 <template>
-  <Row style="height: 100%">
-    <Col
-      style="height: 100%"
-      :xs="{ span: 20, offset: 2 }"
-      :sm="{ span: 12, offset: 6 }"
-      :md="{ span: 8, offset: 8 }"
-      :lg="{ span: 6, offset: 9 }"
-    >
-      <div class="app-login">
-        <div
-          class="wallpaper-image"
-          :style="currentWallpaper.type === 'images' ? currentWallpaper.style : ''"
+  <div class="app-login">
+    <div class="main-box">
+      <WallpaperBackground></WallpaperBackground>
+      <a :href="$Config.System.repository.url" target="_blank">
+        <img
+          style="position: absolute; top: -2px; right: -2px; border: 0; z-index: 5000"
+          src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"
+          alt="Fork me on GitHub"
         >
-        </div>
-        <div class="login-modal-header">
-          <img class="login-logo" :src="$Config.System.logo" :alt="$Config.System.title">
-        </div>
-        <div class="login-modal-body">
-          <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
-            <Form-item prop="account">
-              <Input type="text" v-model="formData.account" placeholder="请输入用户名">
-              <Icon type="ios-person-outline" slot="prepend" style="font-size: 16px;"></Icon>
-              </Input>
-            </Form-item>
-            <Form-item prop="password">
-              <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码" @on-enter="handleSignIn">
-              <Icon type="ios-locked-outline" slot="prepend" style="font-size: 16px;"></Icon>
-              <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
-              </Input>
-            </Form-item>
-          </Form>
+      </a>
+      <div class="login-header">
+        <div class="avatar-block">
+          <img class="avatar" :src="$Config.System.logo" alt="">
         </div>
       </div>
-    </Col>
-  </Row>
+      <div class="login-body">
+        <Form class="login-form" ref="signInForm" :model="formData" :rules="signInFormRules">
+          <Form-item prop="account">
+            <Input type="text" v-model="formData.account" placeholder="请输入用户名">
+            </Input>
+          </Form-item>
+          <Form-item prop="password">
+            <Input :type="passwordInputType" v-model="formData.password" placeholder="请输入密码，回车登录" @on-enter="handleSignIn">
+            <Button slot="append" :icon="passwordInputType === 'password' ? 'eye-disabled' : 'eye'" style="font-size: 16px; line-height: 1;" @click="showPassword"></Button>
+            </Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div class="login-footer">
+        <div class="notice-text">测试账号：admin，密码：123456</div>
+        <Button type="primary" :loading="loading" @click="handleSignIn">登录</Button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-
   export default {
     name: 'Login',
     data () {
       return {
         // 是否显示video
-        // showVideo: false,
+      //        showVideo: false,
         // 是否显示登录弹窗
         showSignInModal: true,
         loading: false,
@@ -130,11 +147,6 @@
         // 密码输入框类型
         passwordInputType: 'password'
       }
-    },
-    computed: {
-      ...mapState('Platform/Wallpaper', {
-        currentWallpaper: state => state.currentWallpaper
-      })
     },
     methods: {
       triggerMenu: function (routerName) {

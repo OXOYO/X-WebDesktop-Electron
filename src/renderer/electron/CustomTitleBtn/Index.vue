@@ -12,7 +12,7 @@
     line-height: 30px;
     background-color: transparent;
     margin-top: 2px;
-    z-index: 1500;
+    z-index: 1000;
     top: 0;
     left: 0;
     right: 0;

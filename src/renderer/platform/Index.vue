@@ -37,7 +37,8 @@
          DesktopIcon: components.DesktopIcon,
          DesktopWidget: components.DesktopWidget,
          Window: components.Window,
-         Wallpaper: components.Wallpaper
+         Wallpaper: components.Wallpaper,
+         SplitScreen: components.SplitScreen
         }"
       >
         <component :is="components.TaskBar">
@@ -55,7 +56,7 @@
 </template>
 
 <script>
-  import CustomTitleBtn from '../electron/CustomTitleBtn/Index.vue'
+  import CustomTitleBtn from '@/electron/CustomTitleBtn/Index.vue'
   import { mapState } from 'vuex'
   import config from './config'
   import utils from '@/global/utils'

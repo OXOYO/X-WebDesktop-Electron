@@ -162,7 +162,7 @@
             title: '启用/停用',
             key: 'status',
             render: function (h, params) {
-              return h('XSwitch',
+              return h('USwitch',
                 {
                   props: {
                     size: 'large',
