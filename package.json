@@ -1,6 +1,6 @@
 {
   "name": "x-webdesktop-electron",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "author": "OXOYO <zmn2007.hi@163.com>",
   "description": "The WebDesktop system based on Vue and Electron",
   "license": null,

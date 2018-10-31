@@ -13,7 +13,7 @@
 
 # Download for Windows
 
-[3.x](https://github.com/OXOYO/X-WebDesktop-Electron/blob/master/build/X-WebDesktop%20Setup%203.0.1.exe?raw=true)
+[3.x](https://github.com/OXOYO/X-WebDesktop-Electron/blob/master/build/X-WebDesktop%20Setup%203.0.2.exe?raw=true)
 
 #### Build Setup
 
