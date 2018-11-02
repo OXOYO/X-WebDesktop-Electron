@@ -1,0 +1,8 @@
+本系统基于 Vue & Koa & Electron 的 WebDesktop 视窗系统。
+
+感谢您使用X-WebDesktop。
+
+作者：OXOYO
+email：zmn2007.hi@163.com
+Github：https://github.com/OXOYO/X-WebDesktop-Vue
+LICENSE：MIT
