@@ -48,6 +48,9 @@ function createWindow () {
   })
 }
 
+// 禁用缓存
+app.commandLine.appendSwitch('--disable-http-cache')
+
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {

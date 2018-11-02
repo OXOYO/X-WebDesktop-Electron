@@ -42,7 +42,7 @@
     name: 'MainPage',
     data () {
       return {
-        appUrl: '//translate.google.cn/m/translate',
+        appUrl: 'http://translate.google.cn/m/translate',
         appPath: null,
         appWidth: 0,
         appHeight: 0

@@ -21,7 +21,7 @@
     <iframe
       class="iframe-box"
       name="iframe-box"
-      src="//i.tianqi.com/index.php?c=code&id=55"
+      src="http://i.tianqi.com/index.php?c=code&id=55"
       width="255"
       height="294"
       frameborder="0"
