@@ -1,9 +1,9 @@
-version: 3.0.2
+version: 3.0.3
 files:
-  - url: x-webdesktop-electron-setup-3.0.2.exe
-    sha512: OtKxd/XiPuvbI4qF599XX+JfyUhsF/FxvS2QcmejAtcsJZgU/0+3yNNbBCIvHwkexo0EZjDtWkoW0lHA7xUzew==
-    size: 41214142
-path: x-webdesktop-electron-setup-3.0.2.exe
-sha512: OtKxd/XiPuvbI4qF599XX+JfyUhsF/FxvS2QcmejAtcsJZgU/0+3yNNbBCIvHwkexo0EZjDtWkoW0lHA7xUzew==
-sha2: 85ed408dcb113f136fc90cf96418fbc156522ca4470837f46da763b210f788c9
-releaseDate: '2018-10-31T09:49:52.579Z'
+  - url: x-webdesktop-electron-setup-3.0.3.exe
+    sha512: pRD6SdJH9DndpOKhK/JpQ1DyENlZi2WWfSkAKuyesXn31CKm78kC09SGk3tFXnpr5qcuh3bk8QOFSubw/GuxuQ==
+    size: 41214183
+path: x-webdesktop-electron-setup-3.0.3.exe
+sha512: pRD6SdJH9DndpOKhK/JpQ1DyENlZi2WWfSkAKuyesXn31CKm78kC09SGk3tFXnpr5qcuh3bk8QOFSubw/GuxuQ==
+sha2: be4be9cbbad5630e77964e00764c013143786282c67baecd51c6c84055f66c75
+releaseDate: '2018-11-02T10:10:19.400Z'
